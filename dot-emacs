@@ -1,0 +1,57 @@
+;; Preferences
+(setq comint-prompt-read-only t)
+(setq inhibit-splash-screen t)
+
+;; Mac specific
+
+;; Give me a hash key on UK keyboard
+(fset 'insert-hash "#")
+(global-set-key (kbd "M-3") 'insert-hash)
+
+;; Use command key as meta
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'super)
+
+;; General key bindings
+
+(global-set-key (kbd "C-;") 'completion-at-point)
+
+;; RoR
+
+;; Use css-mode for scss files
+(add-to-list 'auto-mode-alist '("\\.scss" . css-mode))
+
+
+;; yasnippet
+(add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c")
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
+
+;; Project
+(setq *projects* '(("depot" "~/src/ruby/depot")))
+(setq *current-project* "depot")
+
+(defun current-project ()
+  (assoc *current-project* *projects*))
+
+(defun files-in-project (prj)
+  (process-lines "find"
+		 (expand-file-name (project-base-dir prj))
+		 "-type" "f"))
+
+(defun find-file-in-project ()
+  (interactive)
+  (let ((filename (completing-read "Filename: "
+				   (files-in-project (current-project)))))
+    (find-file filename)))
+
+(defun switch-project (name)
+  (interactive "sProject name: ")
+  (setq *current-project* name))
+
+(defun project-base-dir (prj)
+  (cadr prj))
+
+
+(global-set-key (kbd "M-t") 'find-file-in-project)
