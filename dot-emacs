@@ -1,6 +1,7 @@
 ;; Preferences
 (setq comint-prompt-read-only t)
 (setq inhibit-splash-screen t)
+;;(setq highlight-paren-mode t)
 
 ;; Mac specific
 
@@ -32,13 +33,17 @@
 (setq *projects* '(("depot" "~/src/ruby/depot")))
 (setq *current-project* "depot")
 
+(defun find-files (dir &optional name)
+  (let ((args (list "find" dir "-type" "f")))
+    (if name
+	(setq args (append args (list "-name" name))))
+    (apply 'process-lines args)))
+
 (defun current-project ()
   (assoc *current-project* *projects*))
 
-(defun files-in-project (prj)
-  (process-lines "find"
-		 (expand-file-name (project-base-dir prj))
-		 "-type" "f"))
+(defun files-in-project (prj &optional glob)
+  (find-files (expand-file-name (project-base-dir prj)) glob))
 
 (defun find-file-in-project ()
   (interactive)
@@ -53,5 +58,11 @@
 (defun project-base-dir (prj)
   (cadr prj))
 
+(defun find-ruby-file-in-project ()
+  (interactive)
+  (let ((filename (completing-read "Filename: "
+				   (files-in-project (current-project) "*.rb"))))
+    (find-file filename)))
 
-(global-set-key (kbd "M-t") 'find-file-in-project)
+(global-set-key (kbd "M-r") 'find-file-in-project)
+(global-set-key (kbd "M-t") 'find-ruby-file-in-project)
