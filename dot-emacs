@@ -48,3 +48,8 @@
 
 (load-file "~/.emacs.d/groovy-electric.el")
 (require 'groovy-electric)
+
+
+;; Gradle 
+(load-file "~/.emacs.d/gradle-mode.el")
+(require 'gradle-mode)
