@@ -53,3 +53,8 @@
 ;; Gradle 
 (load-file "~/.emacs.d/gradle-mode.el")
 (require 'gradle-mode)
+
+
+;; Puppet
+(load-file "~/.emacs.d/puppet-mode.el")
+(require 'puppet-mode)
