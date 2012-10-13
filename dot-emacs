@@ -45,3 +45,6 @@
 ;; Groovy
 (load-file "~/.emacs.d/groovy-mode.el")
 (require 'groovy-mode)
+
+(load-file "~/.emacs.d/groovy-electric.el")
+(require 'groovy-electric)
