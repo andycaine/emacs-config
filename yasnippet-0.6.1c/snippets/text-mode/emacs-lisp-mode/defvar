@@ -1,2 +1,0 @@
-(defvar *${1:variable-name}* ${2:init-expr})
-$0
