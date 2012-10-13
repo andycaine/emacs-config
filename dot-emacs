@@ -40,20 +40,8 @@
 (add-to-list 'load-path "~/.emacs.d/yasnippet")
 (require 'yasnippet)
 (yas-global-mode 1)
-;;(yas/initialize)
-;;(yas/load-directory "~/.emacs.d/yasnippet/snippets")
 
 
-;; basic groovy editing support
-(require 'generic-x)
-(define-generic-mode
-  'groovy-mode   ;; mode name
-  '("//") ;; comments
-  '("for" "def" "if" "else" "while" 
-    "import" "class") ;; some keywords
-  '(("=" . 'font-lock-operator)
-    (";" . 'font-lock-builtin))
-  '("\\.groovy")
-  nil  ;; other functions to call
-  "A mode for groovy files")
-
+;; Groovy
+(load-file "~/.emacs.d/groovy-mode.el")
+(require 'groovy-mode)
