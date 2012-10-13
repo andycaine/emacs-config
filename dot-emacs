@@ -1,7 +1,12 @@
 ;; Preferences
 (setq comint-prompt-read-only t)
 (setq inhibit-splash-screen t)
-;;(setq highlight-paren-mode t)
+(setq-default indent-tabs-mode nil)
+(tool-bar-mode nil)
+(column-number-mode t)
+(display-time-mode t)
+(scroll-bar-mode (quote right))
+(show-paren-mode t)
 
 ;; Mac specific
 
@@ -13,9 +18,17 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
 
-;; General key bindings
+;; My key mappings
+(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
 
-(global-set-key (kbd "C-;") 'completion-at-point)
+(define-key my-keys-minor-mode-map (kbd "C-;") 'completion-at-point)
+
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " my-keys" 'my-keys-minor-mode-map)
+
+(my-keys-minor-mode 1)
+
 
 ;; RoR
 
@@ -29,40 +42,17 @@
 (yas/initialize)
 (yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
 
-;; Project
-(setq *projects* '(("depot" "~/src/ruby/depot")))
-(setq *current-project* "depot")
 
-(defun find-files (dir &optional name)
-  (let ((args (list "find" dir "-type" "f")))
-    (if name
-	(setq args (append args (list "-name" name))))
-    (apply 'process-lines args)))
+;; basic groovy editing support
+(require 'generic-x)
+(define-generic-mode
+  'groovy-mode   ;; mode name
+  '("//") ;; comments
+  '("for" "def" "if" "else" "while" 
+    "import" "class") ;; some keywords
+  '(("=" . 'font-lock-operator)
+    (";" . 'font-lock-builtin))
+  '("\\.groovy")
+  nil  ;; other functions to call
+  "A mode for groovy files")
 
-(defun current-project ()
-  (assoc *current-project* *projects*))
-
-(defun files-in-project (prj &optional glob)
-  (find-files (expand-file-name (project-base-dir prj)) glob))
-
-(defun find-file-in-project ()
-  (interactive)
-  (let ((filename (completing-read "Filename: "
-				   (files-in-project (current-project)))))
-    (find-file filename)))
-
-(defun switch-project (name)
-  (interactive "sProject name: ")
-  (setq *current-project* name))
-
-(defun project-base-dir (prj)
-  (cadr prj))
-
-(defun find-ruby-file-in-project ()
-  (interactive)
-  (let ((filename (completing-read "Filename: "
-				   (files-in-project (current-project) "*.rb"))))
-    (find-file filename)))
-
-(global-set-key (kbd "M-r") 'find-file-in-project)
-(global-set-key (kbd "M-t") 'find-ruby-file-in-project)
