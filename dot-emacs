@@ -30,6 +30,11 @@
 (my-keys-minor-mode 1)
 
 
+(global-set-key [M-left] 'windmove-left)
+(global-set-key [M-right] 'windmove-right)
+(global-set-key [M-up] 'windmove-up)
+(global-set-key [M-down] 'windmove-down)
+
 ;; RoR
 
 ;; Use css-mode for scss files
@@ -41,23 +46,71 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 
+(require 'generic-x)
 
 ;; Groovy
-(load-file "~/.emacs.d/groovy-mode.el")
+(defvar groovy-tab-width 2)
+
+(defun groovy-keywords ()
+  '("for" "class" "in" "any" "this" "super" "new" "def" "import"))
+
+(defun groovy-font-lock-defaults ()
+  `((,(regexp-opt (groovy-keywords) 'words))
+    nil
+    nil
+    nil
+    nil
+    ))
+
+(defun groovy-indent-line ()
+  "Indent current line for `groovy-mode'."
+  (interactive)
+  (let ((indent-col 0))
+    (save-excursion
+      (beginning-of-line)
+      (condition-case nil
+          (while t
+            (backward-up-list 1)
+            (when (looking-at "[[{]")
+              (setq indent-col (+ indent-col groovy-tab-width))))
+        (error nil)))
+    (save-excursion
+      (back-to-indentation)
+      (when (and (looking-at "[]}]") (>= indent-col groovy-tab-width))
+        (setq indent-col (- indent-col groovy-tab-width))))
+    (indent-line-to indent-col)))
+
+(define-derived-mode groovy-mode fundamental-mode "Groovy script"
+  "Groovy mode is a major mode for editing groovy scripts"
+  
+  (setq font-lock-defaults (groovy-font-lock-defaults))
+
+  (when groovy-tab-width
+    (setq tab-width groovy-tab-width))
+
+  (setq comment-start "//")
+  (setq comment-end "")
+
+  (setq indent-line-function 'groovy-indent-line)
+
+  (modify-syntax-entry ?/ "< 2b" groovy-mode-syntax-table)
+  (modify-syntax-entry ?\n "> b" groovy-mode-syntax-table)
+  (modify-syntax-entry ?' "\"" groovy-mode-syntax-table)
+  
+)
+(provide 'groovy-mode)
+
 (require 'groovy-mode)
 
-(load-file "~/.emacs.d/groovy-electric.el")
-(require 'groovy-electric)
-
-
-;; Gradle 
-(load-file "~/.emacs.d/gradle-mode.el")
-(require 'gradle-mode)
-
+(add-to-list 'auto-mode-alist '("\\.(groovy|grade)$" . groovy-mode))
 
 ;; Puppet
 (load-file "~/.emacs.d/puppet-mode.el")
 (require 'puppet-mode)
+
+
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
