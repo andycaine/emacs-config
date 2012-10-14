@@ -52,7 +52,7 @@
 (defvar groovy-tab-width 2)
 
 (defun groovy-keywords ()
-  '("for" "class" "in" "any" "this" "super" "new" "def" "import"))
+  '("for" "class" "in" "any" "this" "super" "new" "def" "import" "if"))
 
 (defun groovy-font-lock-defaults ()
   `((,(regexp-opt (groovy-keywords) 'words))
@@ -98,18 +98,17 @@
   (modify-syntax-entry ?' "\"" groovy-mode-syntax-table)
   
 )
-(provide 'groovy-mode)
 
-(require 'groovy-mode)
 
-(add-to-list 'auto-mode-alist '("\\.(groovy|grade)$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.gradle)$" . groovy-mode))
 
 ;; Puppet
 (load-file "~/.emacs.d/puppet-mode.el")
 (require 'puppet-mode)
 
 
-
+(set-face-attribute 'default nil :height 110)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
