@@ -108,7 +108,7 @@
 (require 'puppet-mode)
 
 
-(set-face-attribute 'default nil :height 110)
+(set-face-attribute 'default nil :height 90)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
