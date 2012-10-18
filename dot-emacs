@@ -48,6 +48,18 @@
 
 (require 'generic-x)
 
+;; 
+(define-generic-mode story-mode
+  '("!-")
+  '("Given" "When" "Then" "Narrative" "Meta" "And" "Scenario" "Examples")
+  nil
+  nil
+  nil
+  "Story mode is a minor mode for editing JBehave story files")
+
+(add-to-list 'auto-mode-alist '("\\.story" . story-mode))
+
+
 ;; Groovy
 (defvar groovy-tab-width 2)
 
@@ -96,7 +108,7 @@
   (modify-syntax-entry ?/ "< 2b" groovy-mode-syntax-table)
   (modify-syntax-entry ?\n "> b" groovy-mode-syntax-table)
   (modify-syntax-entry ?' "\"" groovy-mode-syntax-table)
-  
+
 )
 
 
